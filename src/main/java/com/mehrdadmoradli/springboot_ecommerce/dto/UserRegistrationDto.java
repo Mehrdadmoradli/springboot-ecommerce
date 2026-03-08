@@ -1,16 +1,25 @@
 package com.mehrdadmoradli.springboot_ecommerce.dto;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 public class UserRegistrationDto {
 
+	@NotBlank(message = "Email is required.")
+	@Email(message = "Must be a valid email.")
     private String email;
 	private String phoneNumber;
+	@NotBlank(message = "Username is required.")
     private String username;
+	@NotBlank(message = "Password is required.")
     private String password;
+	@NotBlank(message = "First Name is required.")
 	private String firstName;
+	@NotBlank(message = "Last Name is required.")
 	private String lastName;
 	private String country;
 	private String city;
 	private String street;
+	@NotBlank(message = "Postal Code is required.")
 	private String postalCode;
 
     public UserRegistrationDto() {
