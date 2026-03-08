@@ -1,0 +1,68 @@
+package com.mehrdadmoradli.springboot_ecommerce.service;
+
+import com.mehrdadmoradli.springboot_ecommerce.dto.UserRegistrationDto;
+import com.mehrdadmoradli.springboot_ecommerce.entity.User;
+import com.mehrdadmoradli.springboot_ecommerce.repository.*;
+
+
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.modelmapper.ModelMapper;
+
+@Service
+public class UserServiceImpl implements UserService {
+	
+	@Autowired
+	UserRegistrationRepository repository;
+	@Autowired
+	ModelMapper mapper;
+	
+	@Override
+	public User registerUser(UserRegistrationDto userDto) {	
+		User userToBeSaved = mapper.map(userDto, User.class);
+		userToBeSaved.setRoles(Set.of("ROLE_USER"));
+		User savedUser = repository.save(userToBeSaved);
+		return savedUser;
+	}
+	@Override
+	public User registerAdmin(UserRegistrationDto userDto) {	
+		User userToBeSaved = mapper.map(userDto, User.class);
+		userToBeSaved.setRoles(Set.of("ROLE_ADMIN"));
+		User savedUser = repository.save(userToBeSaved);
+		return savedUser;
+	}
+	@Override
+	public User updateUser(UserRegistrationDto userDto, Long id) {
+		User userToBeUpdated = repository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+		userToBeUpdated.setEmail(userDto.getEmail());
+		userToBeUpdated.setPhoneNumber(userDto.getPhoneNumber());
+		userToBeUpdated.setUsername(userDto.getUsername());
+		userToBeUpdated.setPassword(userDto.getPassword());
+		userToBeUpdated.setFirstName(userDto.getFirstName());
+		userToBeUpdated.setLastName(userDto.getLastName());
+		userToBeUpdated.setCountry(userDto.getCountry());
+		userToBeUpdated.setCity(userDto.getCity());
+		userToBeUpdated.setStreet(userDto.getStreet());
+		userToBeUpdated.setPostalCode(userDto.getPostalCode());
+		User savedUser = repository.save(userToBeUpdated);
+		return savedUser;
+	}
+	@Override
+	public User getUserById(Long id) {
+		User user = repository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+		return user;
+	}
+	@Override
+	public List<User> getAllUsers(){
+		List<User> userList = repository.findAll();
+		return userList;
+	}
+	@Override
+	public void deleteUser(Long id) {
+		User user = repository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+		repository.delete(user);
+	}
+}
