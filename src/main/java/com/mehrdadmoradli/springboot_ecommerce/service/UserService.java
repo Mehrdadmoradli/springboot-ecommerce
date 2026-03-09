@@ -8,7 +8,7 @@ public interface UserService {
 	
 	User registerUser(UserRegistrationDto userDto);
 	User registerAdmin(UserRegistrationDto userDto);
-	User updateUser(User user, Long id);
+	User updateUser(UserRegistrationDto userdto, Long id);
 	User getUserById(Long id);
 	List<User> getAllUsers();
 	void deleteUser(Long id);

@@ -11,6 +11,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -19,11 +20,14 @@ public class UserServiceImpl implements UserService {
 	UserRegistrationRepository repository;
 	@Autowired
 	ModelMapper mapper;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	
 	@Override
 	public User registerUser(UserRegistrationDto userDto) {	
 		User userToBeSaved = mapper.map(userDto, User.class);
 		userToBeSaved.setRoles(Set.of("ROLE_USER"));
+		userToBeSaved.setPassword(passwordEncoder.encode(userDto.getPassword()));
 		User savedUser = repository.save(userToBeSaved);
 		return savedUser;
 	}
@@ -31,22 +35,15 @@ public class UserServiceImpl implements UserService {
 	public User registerAdmin(UserRegistrationDto userDto) {	
 		User userToBeSaved = mapper.map(userDto, User.class);
 		userToBeSaved.setRoles(Set.of("ROLE_ADMIN"));
+		userToBeSaved.setPassword(passwordEncoder.encode(userDto.getPassword()));
 		User savedUser = repository.save(userToBeSaved);
 		return savedUser;
 	}
 	@Override
 	public User updateUser(UserRegistrationDto userDto, Long id) {
 		User userToBeUpdated = repository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-		userToBeUpdated.setEmail(userDto.getEmail());
-		userToBeUpdated.setPhoneNumber(userDto.getPhoneNumber());
-		userToBeUpdated.setUsername(userDto.getUsername());
-		userToBeUpdated.setPassword(userDto.getPassword());
-		userToBeUpdated.setFirstName(userDto.getFirstName());
-		userToBeUpdated.setLastName(userDto.getLastName());
-		userToBeUpdated.setCountry(userDto.getCountry());
-		userToBeUpdated.setCity(userDto.getCity());
-		userToBeUpdated.setStreet(userDto.getStreet());
-		userToBeUpdated.setPostalCode(userDto.getPostalCode());
+		mapper.map(userDto, userToBeUpdated);
+		userToBeUpdated.setPassword(passwordEncoder.encode(userDto.getPassword()));
 		User savedUser = repository.save(userToBeUpdated);
 		return savedUser;
 	}
@@ -62,7 +59,9 @@ public class UserServiceImpl implements UserService {
 	}
 	@Override
 	public void deleteUser(Long id) {
-		User user = repository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-		repository.delete(user);
+		if (!repository.existsById(id)) {
+			throw new RuntimeException("User not found!");
+		}
+		repository.deleteById(id);
 	}
 }
