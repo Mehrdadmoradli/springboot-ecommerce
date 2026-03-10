@@ -1,6 +1,6 @@
 package com.mehrdadmoradli.springboot_ecommerce.service;
 
-import com.mehrdadmoradli.springboot_ecommerce.dto.UserRegistrationDto;
+import com.mehrdadmoradli.springboot_ecommerce.dto.*;
 import com.mehrdadmoradli.springboot_ecommerce.entity.User;
 import com.mehrdadmoradli.springboot_ecommerce.repository.*;
 
@@ -40,8 +40,9 @@ public class UserServiceImpl implements UserService {
 		return savedUser;
 	}
 	@Override
-	public User updateUser(UserRegistrationDto userDto, Long id) {
+	public User updateUser(UserUpdateDto userDto, Long id) {
 		User userToBeUpdated = repository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+		mapper.getConfiguration().setSkipNullEnabled(true);
 		mapper.map(userDto, userToBeUpdated);
 		userToBeUpdated.setPassword(passwordEncoder.encode(userDto.getPassword()));
 		User savedUser = repository.save(userToBeUpdated);

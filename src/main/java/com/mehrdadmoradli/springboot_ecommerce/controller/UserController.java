@@ -40,7 +40,7 @@ public class UserController {
 		}
 	
 	@PostMapping("/{id}")
-	public ResponseEntity<UserResponseDto> updateUser(@Valid @RequestBody UserRegistrationDto userDto, @PathVariable Long id){
+	public ResponseEntity<UserResponseDto> updateUser(@Valid @RequestBody UserUpdateDto userDto, @PathVariable Long id){
 		User updatedUser = userService.updateUser(userDto, id);
 		UserResponseDto responseDto = mapper.map(updatedUser, UserResponseDto.class);
 		return ResponseEntity.ok(responseDto);
