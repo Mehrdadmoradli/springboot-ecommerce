@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class UserServiceImpl implements UserService {
 	
 	@Autowired
-	UserRegistrationRepository repository;
+	UserRepository repository;
 	@Autowired
 	ModelMapper mapper;
 	@Autowired
