@@ -46,7 +46,9 @@ public class UserController {
 		return ResponseEntity.ok(responseDto);
 	}
 	
+
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id){
 		User user = userService.getUserById(id);
 		UserResponseDto responseDto = mapper.map(user, UserResponseDto.class);
@@ -54,6 +56,7 @@ public class UserController {
 	}
 	
 	@GetMapping
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<List<UserResponseDto>> getAllUsers(){
 		List<User> userList = userService.getAllUsers();
 		List<UserResponseDto> userListDto = new ArrayList<>();
