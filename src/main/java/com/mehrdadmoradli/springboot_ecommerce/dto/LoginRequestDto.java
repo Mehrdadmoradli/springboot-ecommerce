@@ -1,14 +1,14 @@
 package com.mehrdadmoradli.springboot_ecommerce.dto;
 
-public class UserLoginDto {
+public class LoginRequestDto {
 	
     private String username;
     private String password;
     
-    public UserLoginDto() {
+    public LoginRequestDto() {
     	
     }
-    public UserLoginDto(String username, String password) {
+    public LoginRequestDto(String username, String password) {
     	this.username = username;
     	this.password = password;
     }

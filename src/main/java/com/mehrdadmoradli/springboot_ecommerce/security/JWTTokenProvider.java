@@ -8,15 +8,20 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
 import java.security.Key;
+
 @Component
 public class JWTTokenProvider {
 	
-	@Value("${jwt.secret}")
-	private String jwtSecret;
-	@Value("${jwt.expiration}")
+
 	private Long jwtExpiration;
+	private Key key;
 	
-	private final Key KEY = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+	public JWTTokenProvider(@Value("${jwt.secret}") String jwtSecret, 
+							@Value("${jwt.expiration}") Long jwtExpiration) {
+        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        this.jwtExpiration = jwtExpiration;
+	}
+	
 	
 	public String tokenGenerator(String userName, List<String> roles) {
 		
@@ -28,14 +33,14 @@ public class JWTTokenProvider {
         		.claim("roles", roles)
         		.setIssuedAt(date)
         		.setExpiration(expiryDate)
-        		.signWith(KEY)
+        		.signWith(key)
         		.compact();
 	}
 	
 	public String getUserNameFromJWT(String token) {
 		
 		Claims claims = Jwts.parserBuilder()
-		        .setSigningKey(KEY)
+		        .setSigningKey(key)
 		        .build()
 		        .parseClaimsJws(token)
 		        .getBody();
@@ -47,7 +52,7 @@ public class JWTTokenProvider {
 		
 		try {
 			Jwts.parserBuilder()
-			.setSigningKey(KEY)
+			.setSigningKey(key)
 			.build()
 			.parseClaimsJws(token);
 			return true;

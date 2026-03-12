@@ -5,6 +5,7 @@ import com.mehrdadmoradli.springboot_ecommerce.security.JWTTokenProvider;
 import com.mehrdadmoradli.springboot_ecommerce.entity.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,15 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter{
 	
 	@Autowired
 	private UserRepository repository;
 	@Autowired
 	private JWTTokenProvider tokenProvider;
+	
+	
 	
 	public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		String header = request.getHeader("Authorization");
