@@ -1,0 +1,35 @@
+[33mcommit 5c063bd5d236b6fff722b86b136d28e3467e4f4a[m[33m ([m[1;36mHEAD -> [m[1;32mfeatures/user_management[m[33m)[m
+Author: Mehrdad Moradli <117904723+Mehrdadmoradli@users.noreply.github.com>
+Date:   Sun Mar 8 20:46:42 2026 +0100
+
+    Add User Controller
+
+[33mcommit 51982e5da3341b8477ff3b00e629f1cbbac2a53d[m
+Author: Mehrdad Moradli <117904723+Mehrdadmoradli@users.noreply.github.com>
+Date:   Sun Mar 8 17:44:48 2026 +0100
+
+    Add User Service
+
+[33mcommit 99588800c25ec77c48967cfe3f0df449b8f2fbe7[m[33m ([m[1;31morigin/features/user_management[m[33m)[m
+Author: Mehrdad Moradli <MeM@dig.local>
+Date:   Thu Mar 5 16:49:42 2026 +0100
+
+    Add User Registration Repository
+
+[33mcommit ce707be9b40df052dfcd36ce0f1c1aeab7b893ff[m
+Author: Mehrdad Moradli <MeM@dig.local>
+Date:   Thu Mar 5 16:32:42 2026 +0100
+
+    Add Dto Classes
+
+[33mcommit 21af29053d62bece9515b031924eec30fdcbc166[m
+Author: Mehrdad Moradli <MeM@dig.local>
+Date:   Thu Mar 5 16:07:21 2026 +0100
+
+    Add User Entity
+
+[33mcommit 488901c00989895b421a0861dd1c807addcdba17[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: Mehrdad Moradli <MeM@dig.local>
+Date:   Thu Mar 5 14:02:54 2026 +0100
+
+    Initial springboot-ecommerce setup
