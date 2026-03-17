@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,8 @@ public class ProductController {
 
 	@PostMapping
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public ResponseEntity<Product> addProduct(@Valid @RequestBody Product product) {
-		Product savedProduct = productService.addProduct(product);
+	public ResponseEntity<Product> addProduct(@Valid @RequestBody Product product, @RequestParam Long categoryId) {
+		Product savedProduct = productService.addProduct(product, categoryId);
 		return ResponseEntity.status(201).body(savedProduct);
 	}
 	
@@ -48,8 +49,8 @@ public class ProductController {
 	
 	@PutMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public ResponseEntity<Product> updateProduct(@Valid @RequestBody Product product, @PathVariable Long id){
-		Product updatedProduct = productService.updateProduct(product, id);
+	public ResponseEntity<Product> updateProduct(@Valid @RequestBody Product product, @PathVariable Long id, @RequestParam Long categoryId){
+		Product updatedProduct = productService.updateProduct(product, id, categoryId);
 		return ResponseEntity.ok(updatedProduct);
 	}
 	
