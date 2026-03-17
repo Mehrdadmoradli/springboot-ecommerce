@@ -27,7 +27,7 @@ public class UserController {
 		
 			User savedUser = userService.registerUser(userDto);
 			UserResponseDto responseDto = mapper.map(savedUser, UserResponseDto.class);
-			return ResponseEntity.ok(responseDto);
+			return ResponseEntity.status(201).body(responseDto);
 		}
 	
 	@PostMapping("/admin")
@@ -36,10 +36,10 @@ public class UserController {
 		
 			User savedUser = userService.registerAdmin(userDto);
 			UserResponseDto responseDto = mapper.map(savedUser, UserResponseDto.class);
-			return ResponseEntity.ok(responseDto);
+			return ResponseEntity.status(201).body(responseDto);
 		}
 	
-	@PostMapping("/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<UserResponseDto> updateUser(@Valid @RequestBody UserUpdateDto userDto, @PathVariable Long id){
 		User updatedUser = userService.updateUser(userDto, id);
 		UserResponseDto responseDto = mapper.map(updatedUser, UserResponseDto.class);
@@ -70,7 +70,7 @@ public class UserController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteUser(@PathVariable Long id){
 		userService.deleteUser(id);
-		return ResponseEntity.ok("User has been removed.");
+		return ResponseEntity.ok("User has been removed");
 	}	
 }	
 

@@ -21,13 +21,13 @@ public class DataInitializer {
 
                 User admin = new User();
 
+                admin.setEmail("admin@springboot_ecommerce.de");
+                admin.setPhoneNumber("004911111111111");
                 admin.setUsername("admin");
-                admin.setEmail("admin@example.com");
                 admin.setPassword(passwordEncoder.encode("admin123"));
-
                 admin.setFirstName("System");
                 admin.setLastName("Admin");
-
+                admin.setPostalCode("11111");
                 admin.setRoles(Set.of("ROLE_ADMIN"));
 
                 userRepository.save(admin);
