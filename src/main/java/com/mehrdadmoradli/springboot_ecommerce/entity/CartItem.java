@@ -24,18 +24,17 @@ public class CartItem {
 	private Integer quantity;
 	
 	@Column(nullable = false)
-	private BigDecimal price = new BigDecimal("0.0");
+	private BigDecimal price = BigDecimal.ZERO;
 	
 
 	public CartItem() {
 	}
 
 
-	public CartItem(Cart cart, Product product, Integer quantity, BigDecimal price) {
+	public CartItem(Cart cart, Product product, Integer quantity) {
 		this.cart = cart;
 		this.product = product;
 		this.quantity = quantity;
-		this.price = price;
 	}
 
 	public Long getId() {

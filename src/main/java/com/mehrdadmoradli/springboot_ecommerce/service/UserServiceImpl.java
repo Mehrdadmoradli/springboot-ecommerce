@@ -2,6 +2,7 @@ package com.mehrdadmoradli.springboot_ecommerce.service;
 
 import com.mehrdadmoradli.springboot_ecommerce.dto.*;
 import com.mehrdadmoradli.springboot_ecommerce.entity.User;
+import com.mehrdadmoradli.springboot_ecommerce.entity.Cart;
 import com.mehrdadmoradli.springboot_ecommerce.repository.*;
 
 
@@ -19,6 +20,8 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserRepository repository;
 	@Autowired
+	CartRepository cartRepository;
+	@Autowired
 	ModelMapper mapper;
 	@Autowired
 	PasswordEncoder passwordEncoder;
@@ -29,6 +32,10 @@ public class UserServiceImpl implements UserService {
 		userToBeSaved.setRoles(Set.of("ROLE_USER"));
 		userToBeSaved.setPassword(passwordEncoder.encode(userDto.getPassword()));
 		User savedUser = repository.save(userToBeSaved);
+		Cart cart = new Cart();
+		cart.setUser(savedUser);
+		cartRepository.save(cart);
+		
 		return savedUser;
 	}
 	@Override
