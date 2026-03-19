@@ -80,7 +80,6 @@ public class CartItem {
 	public void updatePrice() {
 		this.price = this.product.getPrice().multiply(BigDecimal.valueOf(this.quantity));
 	}
-	
-	
+
 }
 

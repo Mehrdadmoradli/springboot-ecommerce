@@ -66,6 +66,7 @@ public class CartServiceImpl implements CartService {
 			CartItem item = iter.next();
 			if (item.getId().equals(cartItemId)) {
 				item.setQuantity(newQuantity);
+				item.updatePrice();
 				cartRepository.save(cart);
 				return item;
 			}

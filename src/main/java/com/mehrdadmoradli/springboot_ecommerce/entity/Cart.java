@@ -73,4 +73,8 @@ public class Cart {
 					.reduce(BigDecimal.ZERO, BigDecimal::add);
 			return this.totalPrice;
 		}
+		
+		public String getUsername() {
+			return this.user.getUsername();
+		}
 }
