@@ -1,12 +1,11 @@
 package com.mehrdadmoradli.springboot_ecommerce.security;
 
 import com.mehrdadmoradli.springboot_ecommerce.repository.UserRepository;
-import com.mehrdadmoradli.springboot_ecommerce.security.JWTTokenProvider;
+
 import com.mehrdadmoradli.springboot_ecommerce.entity.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -40,7 +39,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter{
 					User user = userOpt.get();
 					var authorities = user.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
                     UsernamePasswordAuthenticationToken auth = 
-                            new UsernamePasswordAuthenticationToken(user, null, authorities);
+                            new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities);
                         SecurityContextHolder.getContext().setAuthentication(auth);
 				}
 			}

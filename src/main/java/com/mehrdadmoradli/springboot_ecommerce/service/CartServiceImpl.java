@@ -23,23 +23,25 @@ public class CartServiceImpl implements CartService {
 	
 
 	@Override
-	public Cart addItem(Long userId, Long productId, Integer quantity) {
+	public CartItem addItem(String username, Long productId, Integer quantity) {
 		
-		User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+		User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 		Cart cart = cartRepository.findByUserId(user.getId()).orElseThrow(() -> new RuntimeException("Cart not found"));
 		Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
 		CartItem item = new CartItem(cart, product, quantity);
 		item.updatePrice();
 		cart.getItems().add(item);
 		item.setCart(cart);
+		cartRepository.save(cart);
 		
-		return cartRepository.save(cart);
+		return item;
+		
 	}
 
 	@Override
-	public Cart removeItem(Long userId, Long cartItemId) {
+	public Cart removeItem(String username, Long cartItemId) {
 		
-		User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+		User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 		Cart cart = cartRepository.findByUserId(user.getId()).orElseThrow(() -> new RuntimeException("Cart not found"));
 		Iterator<CartItem> iter = cart.getItems().iterator();
 		while(iter.hasNext()) {
@@ -54,9 +56,9 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public Cart updateItemQuantity(Long userId, Long cartItemId, Integer newQuantity) {
+	public CartItem updateItemQuantity(String username, Long cartItemId, Integer newQuantity) {
 		
-		User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+		User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 		Cart cart = cartRepository.findByUserId(user.getId()).orElseThrow(() -> new RuntimeException("Cart not found"));
 
 		Iterator<CartItem> iter = cart.getItems().iterator();
@@ -64,7 +66,8 @@ public class CartServiceImpl implements CartService {
 			CartItem item = iter.next();
 			if (item.getId().equals(cartItemId)) {
 				item.setQuantity(newQuantity);
-				return cartRepository.save(cart);
+				cartRepository.save(cart);
+				return item;
 			}
 		}
 		
@@ -72,18 +75,18 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public BigDecimal getTotalPrice(Long userId) {
+	public BigDecimal getTotalPrice(String username) {
 		
-		User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+		User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 		Cart cart = cartRepository.findByUserId(user.getId()).orElseThrow(() -> new RuntimeException("Cart not found"));
 		
 		return cart.calculateTotalPrice();
 	}
 
 	@Override
-	public List<CartItem> getItems(Long userId) {
+	public List<CartItem> getItems(String username) {
 		
-		User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+		User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 		Cart cart = cartRepository.findByUserId(user.getId()).orElseThrow(() -> new RuntimeException("Cart not found"));
 		
 		return cart.getItems();

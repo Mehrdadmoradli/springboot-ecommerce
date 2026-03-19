@@ -1,6 +1,5 @@
 package com.mehrdadmoradli.springboot_ecommerce.config;
 
-import com.mehrdadmoradli.springboot_ecommerce.security.*;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Configuration;

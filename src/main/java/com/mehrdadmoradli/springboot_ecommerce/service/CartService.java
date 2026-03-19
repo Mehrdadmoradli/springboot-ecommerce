@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface CartService {
 	
-	Cart addItem(Long userId, Long productId, Integer quantity);
-	Cart removeItem(Long userId, Long cartItemId);
-	Cart updateItemQuantity(Long userId, Long cartItemId, Integer newQuantity);
-	BigDecimal getTotalPrice(Long userId);
-	List<CartItem> getItems(Long userId);
+	CartItem addItem(String username, Long productId, Integer quantity);
+	Cart removeItem(String username, Long cartItemId);
+	CartItem updateItemQuantity(String username, Long cartItemId, Integer newQuantity);
+	BigDecimal getTotalPrice(String username);
+	List<CartItem> getItems(String username);
 }
