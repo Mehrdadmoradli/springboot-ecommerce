@@ -77,8 +77,9 @@ public class CartItem {
 		this.price = price;
 	}
 	
-	public void updatePrice() {
+	public BigDecimal updatePrice() {
 		this.price = this.product.getPrice().multiply(BigDecimal.valueOf(this.quantity));
+		return this.price;
 	}
 
 }

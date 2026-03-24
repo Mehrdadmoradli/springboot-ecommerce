@@ -15,9 +15,14 @@ public class OrderItem {
 	@JoinColumn(name = "order_id", nullable = false)
 	private Order order;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "product_id", nullable = false)
-	private  Product product;
+	@Column(nullable = false)
+	private Long productId;
+	
+	@Column(nullable = false)
+	private String productName;
+
+	@Column(nullable = false)
+	private BigDecimal priceAtPurchase;
 	
 	@Column(nullable = false)
 	private Integer quantity;
@@ -30,9 +35,11 @@ public class OrderItem {
 		}
 
 
-		public OrderItem(Order order, Product product, Integer quantity, BigDecimal price) {
+		public OrderItem(Order order, Long productId, String productName, BigDecimal priceAtPurchase, Integer quantity, BigDecimal price) {
 			this.order = order;
-			this.product = product;
+			this.productId = productId;
+			this.productName = productName;
+			this.priceAtPurchase = priceAtPurchase;
 			this.quantity = quantity;
 			this.price = price;
 		}
@@ -49,12 +56,28 @@ public class OrderItem {
 			this.order = order;
 		}
 
-		public Product getProduct() {
-			return product;
+		public Long getProductId() {
+			return this.productId;
 		}
-
-		public void setProduct(Product product) {
-			this.product = product;
+		
+		public void setProductId(Long productId) {
+			this.productId = productId;
+		}
+		
+		public String getProductName() {
+			return this.productName;
+		}
+		
+		public void setProductName(String productName) {
+			this.productName = productName;
+		}
+		
+		public BigDecimal getPriceAtPurchase() {
+			return this.priceAtPurchase;
+		}
+		
+		public void setPriceAtPurchase(BigDecimal priceAtPurchase) {
+			this.priceAtPurchase = priceAtPurchase;
 		}
 
 		public Integer getQuantity() {
@@ -71,6 +94,11 @@ public class OrderItem {
 
 		public void setPrice(BigDecimal price) {
 			this.price = price;
+		}
+		
+		public BigDecimal updatePrice() {
+			this.price = this.priceAtPurchase.multiply(BigDecimal.valueOf(this.quantity));
+			return this.price;
 		}
 }
 

@@ -24,6 +24,12 @@ public class Order {
 	@Column(nullable = false)
 	private LocalDateTime createdAt;
 	
+	@Column(nullable = false)
+	private String status;
+	
+	@Column(nullable = false)
+	private String adress;
+	
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<OrderItem> items = new ArrayList<>();
 	
@@ -31,10 +37,12 @@ public class Order {
 	public Order() {
 	}
 
-	public Order(User user, BigDecimal totalPrice, LocalDateTime createdAt, List<OrderItem> items) {
+	public Order(User user, BigDecimal totalPrice, LocalDateTime createdAt, String status, String adress, List<OrderItem> items) {
 		this.user = user;
 		this.totalPrice = totalPrice;
 		this.createdAt = createdAt;
+		this.status = status;
+		this.adress = adress;
 		this.items = items;
 	}
 
@@ -62,7 +70,22 @@ public class Order {
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
-
+	
+	public String getStatus() {
+		return this.status;
+	}
+	
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	public String getAdress() {
+		return this.adress;
+	}
+	
+	public void setAdress(String adress) {
+		this.adress = adress;
+	}
 
 	public List<OrderItem> getItems() {
 		return items;
