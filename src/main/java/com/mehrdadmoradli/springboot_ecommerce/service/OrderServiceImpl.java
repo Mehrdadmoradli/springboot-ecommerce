@@ -1,0 +1,82 @@
+package com.mehrdadmoradli.springboot_ecommerce.service;
+
+import com.mehrdadmoradli.springboot_ecommerce.enums.OrderStatus;
+import com.mehrdadmoradli.springboot_ecommerce.entity.*;
+import com.mehrdadmoradli.springboot_ecommerce.repository.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.time.LocalDateTime;
+
+
+public class OrderServiceImpl implements OrderService {
+	
+	@Autowired
+	OrderRepository orderRepository;
+	@Autowired
+	UserRepository userRepository;
+	@Autowired 
+	CartRepository cartRepository;
+	@Autowired
+	ProductRepository productRepository;
+	
+
+	@Transactional
+	@Override 
+	public Order createOrder(String userName) {
+		
+		User user = userRepository.findByUsername(userName).orElseThrow(() -> new RuntimeException("User not found"));
+		Cart cart = cartRepository.findByUserId(user.getId()).orElseThrow(() -> new RuntimeException("Cart not found"));
+		Order order = new Order();
+		List<OrderItem> orderItems = new ArrayList<>();
+		
+		for(CartItem cartItem : cart.getItems()) {
+			OrderItem orderItem = new OrderItem();
+			Product product = cartItem.getProduct();
+			if(product.getStock() < cartItem.getQuantity()) {
+				throw new RuntimeException("Not enough stock");
+			}
+			orderItem.setOrder(order);
+			orderItem.setProductId(product.getId());
+			orderItem.setProductName(product.getName());
+			orderItem.setPriceAtPurchase(product.getPrice());
+			orderItem.setQuantity(cartItem.getQuantity());
+			product.setStock(product.getStock() - cartItem.getQuantity());
+			productRepository.save(product);
+			orderItem.updatePrice();
+			orderItems.add(orderItem);
+		}
+		
+		cart.getItems().clear();
+		cartRepository.save(cart);
+		
+		order.setUser(user);
+		order.setStatus(OrderStatus.CREATED); 
+		order.setAdress(user.getStreet() + ", " + user.getPostalCode() + ", " + user.getCity() + ", " + user.getCountry());
+		order.setItems(orderItems);
+		order.calculateTotalPrice();
+		
+		return orderRepository.save(order);
+	}
+
+	@Override
+	public void cancleOrder(Long orderId) {
+		Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+		for (OrderItem item : order.getItems()) {
+			Product product = productRepository.findById(item.getProductId()).orElseThrow(() -> new RuntimeException("Product not found"));
+			product.setStock(product.getStock() + item.getQuantity());
+		}
+		order.setStatus(OrderStatus.CANCELED);
+		order.setCanceledAt(LocalDateTime.now());
+		orderRepository.save(order);
+	}
+}
+
+
+
+
+
+
