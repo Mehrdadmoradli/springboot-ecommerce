@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 
 public class CartResponseDto {
 	
-	private Long id;
 	private String username;
 	private List<CartItemResponseDto> items;
 	private BigDecimal totalPrice;
@@ -13,20 +12,12 @@ public class CartResponseDto {
     public CartResponseDto() {
     }
 
-    public CartResponseDto(Long id, String username, List<CartItemResponseDto> items, BigDecimal totalPrice) {
-        this.id = id;
+    public CartResponseDto(String username, List<CartItemResponseDto> items, BigDecimal totalPrice) {
         this.username = username;
         this.items = items;
         this.totalPrice = totalPrice;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;
