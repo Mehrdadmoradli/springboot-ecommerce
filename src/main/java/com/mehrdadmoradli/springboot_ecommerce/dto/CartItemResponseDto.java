@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 
 public class CartItemResponseDto {
 	
-	private Long id;
 	private Long cartId;
 	private Product product;
 	private Integer quantity;
@@ -17,21 +16,13 @@ public class CartItemResponseDto {
 	    public CartItemResponseDto() {
 	    }
 
-	    public CartItemResponseDto(Long id, Long cartId, Product product, Integer quantity, BigDecimal price) {
-	        this.id = id;
+	    public CartItemResponseDto(Long cartId, Product product, Integer quantity, BigDecimal price) {
 	        this.cartId = cartId;
 	        this.product = product;
 	        this.quantity = quantity;
 	        this.price = price;
 	    }
 
-	    public Long getId() {
-	        return id;
-	    }
-
-	    public void setId(Long id) {
-	        this.id = id;
-	    }
 
 	    public Long getCartId() {
 	        return cartId;

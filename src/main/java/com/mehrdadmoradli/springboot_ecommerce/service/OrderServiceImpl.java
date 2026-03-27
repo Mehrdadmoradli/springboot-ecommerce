@@ -6,12 +6,14 @@ import com.mehrdadmoradli.springboot_ecommerce.repository.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
 
+@Service
 public class OrderServiceImpl implements OrderService {
 	
 	@Autowired
@@ -63,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public void cancleOrder(Long orderId) {
+	public Order cancleOrder(Long orderId) {
 		Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
 		for (OrderItem item : order.getItems()) {
 			Product product = productRepository.findById(item.getProductId()).orElseThrow(() -> new RuntimeException("Product not found"));
@@ -71,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 		order.setStatus(OrderStatus.CANCELED);
 		order.setCanceledAt(LocalDateTime.now());
-		orderRepository.save(order);
+		return orderRepository.save(order);
 	}
 }
 

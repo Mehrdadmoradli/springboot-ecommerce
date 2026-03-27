@@ -5,5 +5,5 @@ import com.mehrdadmoradli.springboot_ecommerce.entity.Order;
 public interface OrderService {
 	
 	Order createOrder(String userName);
-	void cancleOrder(Long orderId);
+	Order cancleOrder(Long orderId);
 }
