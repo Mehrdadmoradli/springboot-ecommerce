@@ -16,6 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.math.BigDecimal;
+
 
 import java.util.List;
 
@@ -40,7 +45,7 @@ public class ProductController {
 		return ResponseEntity.ok(product);
 	}
 	
-	@GetMapping
+	@GetMapping("/all")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<List<Product>> getAllProducts(){
 		List<Product> products = productService.getAllProducts();
@@ -60,5 +65,19 @@ public class ProductController {
 		productService.deleteProductById(id);
 		return ResponseEntity.ok("Product has been removed");
 	}
+	
+	@GetMapping
+	public ResponseEntity<Page<Product>> searchProduct(@RequestParam(required = false) String keyword,
+													   @RequestParam(required = false) Long categoryId,
+													   @RequestParam(required = false) BigDecimal minPrice,
+													   @RequestParam(required = false) BigDecimal maxPrice,
+													   Pageable pageable) {
+		
+		Page<Product> result = productService.searchProduct(keyword, categoryId, minPrice, maxPrice, pageable);
+		
+		return ResponseEntity.ok(result);
+	}
+	
+	
 	
 }
