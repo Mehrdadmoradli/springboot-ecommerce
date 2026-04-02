@@ -69,11 +69,10 @@ public class ProductServiceImpl implements ProductService{
 			BigDecimal maxPrice,
 			Pageable pageable){
 		
-		Specification spec = Specification
-				.where(ProductSpecification.hasName(keyword))
-				.and(ProductSpecification.hasCategory(categoryId))
-				.and(ProductSpecification.priceGreaterThan(minPrice))
-				.and(ProductSpecification.priceLessThan(maxPrice));
+		Specification<Product> spec = Specification.where(ProductSpecification.hasName(keyword));
+		spec = spec.and(ProductSpecification.hasCategory(categoryId));
+		spec = spec.and(ProductSpecification.priceGreaterThan(minPrice));
+		spec = spec.and(ProductSpecification.priceLessThan(maxPrice));
 		
 		return productRepository.findAll(spec, pageable);
 		
