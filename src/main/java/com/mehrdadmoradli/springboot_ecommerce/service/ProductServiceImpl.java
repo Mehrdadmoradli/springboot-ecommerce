@@ -4,11 +4,16 @@ import com.mehrdadmoradli.springboot_ecommerce.entity.Product;
 import com.mehrdadmoradli.springboot_ecommerce.entity.Category;
 import com.mehrdadmoradli.springboot_ecommerce.repository.ProductRepository;
 import com.mehrdadmoradli.springboot_ecommerce.repository.CategoryRepository;
+import com.mehrdadmoradli.springboot_ecommerce.specification.ProductSpecification;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.modelmapper.ModelMapper;
 import java.util.List;
+import java.math.BigDecimal;
 
 @Service
 public class ProductServiceImpl implements ProductService{
@@ -54,6 +59,23 @@ public class ProductServiceImpl implements ProductService{
 			throw new RuntimeException("Product not found");
 		}
 		productRepository.deleteById(id);
+	}
+	
+	@Override
+	public Page<Product> searchProduct(
+			String keyword,
+			Long categoryId,
+			BigDecimal minPrice,
+			BigDecimal maxPrice,
+			Pageable pageable){
+		
+		Specification<Product> spec = Specification.where(ProductSpecification.hasName(keyword));
+		spec = spec.and(ProductSpecification.hasCategory(categoryId));
+		spec = spec.and(ProductSpecification.priceGreaterThan(minPrice));
+		spec = spec.and(ProductSpecification.priceLessThan(maxPrice));
+		
+		return productRepository.findAll(spec, pageable);
+		
 	}
 	
 }
