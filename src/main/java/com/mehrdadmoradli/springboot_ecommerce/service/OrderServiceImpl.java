@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
+;
+
 
 
 @Service
@@ -75,8 +77,18 @@ public class OrderServiceImpl implements OrderService {
 		order.setCanceledAt(LocalDateTime.now());
 		return orderRepository.save(order);
 	}
+	@Override
+	public Order orderPayment(Long orderId) {
+		Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+		int num = (int) Math.random()*10;
+		if (num < 8) {
+			order.setStatus(OrderStatus.PAID);
+			return orderRepository.save(order);
+		}
+		System.out.println("Payment failed.");
+		return order;
+	}
 }
-
 
 
 

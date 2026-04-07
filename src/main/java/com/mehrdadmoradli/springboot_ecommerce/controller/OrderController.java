@@ -5,6 +5,7 @@ import com.mehrdadmoradli.springboot_ecommerce.entity.Order;
 import com.mehrdadmoradli.springboot_ecommerce.entity.OrderItem;
 import com.mehrdadmoradli.springboot_ecommerce.dto.OrderItemResponseDto;
 import com.mehrdadmoradli.springboot_ecommerce.service.OrderServiceImpl;
+import com.mehrdadmoradli.springboot_ecommerce.enums.OrderStatus;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +59,11 @@ public class OrderController {
 		}
 		orderDto.setItems(dtoItems);
 		return ResponseEntity.ok(orderDto);
-		
+	}
+	
+	@PostMapping("/payment")
+	public ResponseEntity<OrderStatus> orderPayment(@RequestParam Long orderId){
+		Order order = orderService.orderPayment(orderId);
+		return ResponseEntity.ok(order.getStatus());
 	}
 }

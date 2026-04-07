@@ -6,4 +6,5 @@ public interface OrderService {
 	
 	Order createOrder(String userName);
 	Order cancleOrder(Long orderId);
+	Order orderPayment(Long orderd);
 }
