@@ -7,4 +7,6 @@ public interface OrderService {
 	Order createOrder(String userName);
 	Order cancleOrder(Long orderId);
 	Order orderPayment(Long orderd);
+	Order markAsShipped(Long orderId);
+	Order markAsDelivered(Long orderId);
 }

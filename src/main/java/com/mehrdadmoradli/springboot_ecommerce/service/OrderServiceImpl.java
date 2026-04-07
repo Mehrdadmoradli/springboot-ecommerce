@@ -74,7 +74,7 @@ public class OrderServiceImpl implements OrderService {
 			product.setStock(product.getStock() + item.getQuantity());
 		}
 		order.setStatus(OrderStatus.CANCELED);
-		order.setCanceledAt(LocalDateTime.now());
+		order.setCanceledAt();
 		return orderRepository.save(order);
 	}
 	@Override
@@ -83,11 +83,29 @@ public class OrderServiceImpl implements OrderService {
 		int num = (int) Math.random()*10;
 		if (num < 8) {
 			order.setStatus(OrderStatus.PAID);
+			order.setPaidAt();
 			return orderRepository.save(order);
 		}
 		System.out.println("Payment failed.");
 		return order;
 	}
+	
+	@Override
+	public Order markAsShipped(Long orderId) {
+		Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+		order.setStatus(OrderStatus.SHIPPED);
+		order.setShippedAt();
+		return orderRepository.save(order);
+	}
+	
+	@Override
+	public Order markAsDelivered(Long orderId) {
+		Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+		order.setStatus(OrderStatus.DELIVERED);
+		order.setDeliveredAt();
+		return orderRepository.save(order);
+	}	
+	
 }
 
 

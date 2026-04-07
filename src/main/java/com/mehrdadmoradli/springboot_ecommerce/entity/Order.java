@@ -26,7 +26,14 @@ public class Order {
 	@Column(nullable = false)
 	private LocalDateTime createdAt;
 	
+	private LocalDateTime paidAt;
+	
+	private LocalDateTime shippedAt;
+	
+	private LocalDateTime deliveredAt;
+	
 	private LocalDateTime canceledAt;
+	
 	
 	@Column(nullable = false)
 	private OrderStatus status;
@@ -74,12 +81,41 @@ public class Order {
 		return createdAt;
 	}
 	
+	@PrePersist
+	public void setCreatedAt() {
+		this.createdAt = LocalDateTime.now();
+	}
+	
+	public LocalDateTime getPaidAt() {
+		return this.paidAt;
+	}
+	
+	public void setPaidAt() {
+		this.paidAt = LocalDateTime.now();
+	}
+	
+	public LocalDateTime getShippedAt() {
+		return this.shippedAt;
+	}
+	
+	public void setShippedAt() {
+		this.shippedAt = LocalDateTime.now();
+	}
+	
+	public LocalDateTime getDeliveredAt() {
+		return this.deliveredAt;
+	}
+	
+	public void setDeliveredAt() {
+		this.deliveredAt = LocalDateTime.now();
+	}
+	
 	public LocalDateTime getCanceledAt() {
 		return this.canceledAt;
 	}
 	
-	public void setCanceledAt(LocalDateTime canceledAt) {
-		this.canceledAt = canceledAt;
+	public void setCanceledAt() {
+		this.canceledAt = LocalDateTime.now();
 	}
 	
 	public OrderStatus getStatus() {
@@ -106,10 +142,6 @@ public class Order {
 		this.items = items;
 	}
 	
-	@PrePersist
-	public void setCreatedAt() {
-		this.createdAt = LocalDateTime.now();
-	}
 	
 	public BigDecimal calculateTotalPrice() {
 		this.totalPrice = this.items.stream()

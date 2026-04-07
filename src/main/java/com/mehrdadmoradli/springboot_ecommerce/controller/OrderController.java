@@ -9,6 +9,7 @@ import com.mehrdadmoradli.springboot_ecommerce.enums.OrderStatus;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class OrderController {
 		return ResponseEntity.ok(orderDto);
 	}
 	
-	@PutMapping
+	@PutMapping("/cancelation")
 	public ResponseEntity<OrderResponseDto> cancleOrder(@RequestParam Long orderId){
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String username = (String) auth.getPrincipal();
@@ -61,9 +62,25 @@ public class OrderController {
 		return ResponseEntity.ok(orderDto);
 	}
 	
+	
 	@PostMapping("/payment")
 	public ResponseEntity<OrderStatus> orderPayment(@RequestParam Long orderId){
 		Order order = orderService.orderPayment(orderId);
 		return ResponseEntity.ok(order.getStatus());
 	}
+	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PutMapping("/shipped")
+	public ResponseEntity<OrderStatus> markAsShipped(@RequestParam Long orderId){
+		Order order = orderService.markAsShipped(orderId);
+		return ResponseEntity.ok(order.getStatus());
+	}
+	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PutMapping("/delivered")
+	public ResponseEntity<OrderStatus> markAsDelivered(@RequestParam Long orderId){
+		Order order = orderService.markAsDelivered(orderId);
+		return ResponseEntity.ok(order.getStatus());
+	}
+	
 }
