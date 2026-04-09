@@ -3,14 +3,21 @@ package com.mehrdadmoradli.springboot_ecommerce.controller;
 import com.mehrdadmoradli.springboot_ecommerce.service.*;
 import com.mehrdadmoradli.springboot_ecommerce.entity.*;
 import com.mehrdadmoradli.springboot_ecommerce.dto.*;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+
+import org.modelmapper.ModelMapper;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.ArrayList;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+
 
 
 @RestController
@@ -40,10 +47,23 @@ public class UserController {
 		}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<UserResponseDto> updateUser(@Valid @RequestBody UserUpdateDto userDto, @PathVariable Long id){
-		User updatedUser = userService.updateUser(userDto, id);
+	public ResponseEntity<UserResponseDto> updateUser(@Valid @RequestBody UserUpdateDto userDto){
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String username = (String) auth.getPrincipal();
+		User updatedUser = userService.updateUser(userDto, username);
 		UserResponseDto responseDto = mapper.map(updatedUser, UserResponseDto.class);
 		return ResponseEntity.ok(responseDto);
+	}
+	
+	@PostMapping("/address")
+	public ResponseEntity<UserResponseDto> addAddress(@RequestBody Address address){
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String username = (String) auth.getPrincipal();
+		User updatedUser = userService.addNewAddress(address, username);
+		UserResponseDto responseDto = mapper.map(updatedUser, UserResponseDto.class);
+		return ResponseEntity.ok(responseDto); 
 	}
 	
 
@@ -68,8 +88,11 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteUser(@PathVariable Long id){
-		userService.deleteUser(id);
+	public ResponseEntity<String> deleteUser(){
+	
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String username = (String) auth.getPrincipal();
+		userService.deleteUser(username);
 		return ResponseEntity.ok("User has been removed");
 	}	
 }	

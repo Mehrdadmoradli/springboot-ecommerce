@@ -7,6 +7,7 @@ public class UserRegistrationDto {
 	@NotBlank(message = "Email is required.")
 	@Email(message = "Must be a valid email.")
     private String email;
+	@NotBlank(message = "Phone number is required.")
 	private String phoneNumber;
 	@NotBlank(message = "Username is required.")
     private String username;
@@ -16,8 +17,11 @@ public class UserRegistrationDto {
 	private String firstName;
 	@NotBlank(message = "Last Name is required.")
 	private String lastName;
+	@NotBlank(message = "Country is required.")
 	private String country;
+	@NotBlank(message = "City is required.")
 	private String city;
+	@NotBlank(message = "Street is required.")
 	private String street;
 	@NotBlank(message = "Postal Code is required.")
 	private String postalCode;

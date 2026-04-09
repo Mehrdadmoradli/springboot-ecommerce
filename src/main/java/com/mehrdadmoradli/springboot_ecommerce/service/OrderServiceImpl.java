@@ -59,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
 		
 		order.setUser(user);
 		order.setStatus(OrderStatus.CREATED); 
-		order.setAdress(user.getStreet() + ", " + user.getPostalCode() + ", " + user.getCity() + ", " + user.getCountry());
+		order.setAdress(user.getAddresses().get(0));
 		order.setItems(orderItems);
 		order.calculateTotalPrice();
 		
