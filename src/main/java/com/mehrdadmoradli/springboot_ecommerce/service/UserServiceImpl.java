@@ -2,6 +2,7 @@ package com.mehrdadmoradli.springboot_ecommerce.service;
 
 import com.mehrdadmoradli.springboot_ecommerce.dto.*;
 import com.mehrdadmoradli.springboot_ecommerce.entity.User;
+import com.mehrdadmoradli.springboot_ecommerce.entity.Address;
 import com.mehrdadmoradli.springboot_ecommerce.entity.Cart;
 import com.mehrdadmoradli.springboot_ecommerce.repository.*;
 
@@ -28,48 +29,63 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public User registerUser(UserRegistrationDto userDto) {	
-		User userToBeSaved = mapper.map(userDto, User.class);
-		userToBeSaved.setRoles(Set.of("ROLE_USER"));
-		userToBeSaved.setPassword(passwordEncoder.encode(userDto.getPassword()));
-		User savedUser = repository.save(userToBeSaved);
+		User user = mapper.map(userDto, User.class);
+		user.setRoles(Set.of("ROLE_USER"));
+		user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+		Address address = new Address(userDto.getCountry(), userDto.getCity(), userDto.getStreet(), userDto.getPostalCode());
+		user.addAddress(address);
 		Cart cart = new Cart();
-		cart.setUser(savedUser);
-		cartRepository.save(cart);
-		
-		return savedUser;
+		cart.setUser(user);
+		return repository.save(user);
 	}
+	
 	@Override
 	public User registerAdmin(UserRegistrationDto userDto) {	
-		User userToBeSaved = mapper.map(userDto, User.class);
-		userToBeSaved.setRoles(Set.of("ROLE_ADMIN"));
-		userToBeSaved.setPassword(passwordEncoder.encode(userDto.getPassword()));
-		User savedUser = repository.save(userToBeSaved);
-		return savedUser;
+		User user = mapper.map(userDto, User.class);
+		user.setRoles(Set.of("ROLE_ADMIN"));
+		user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+		Address address = new Address(userDto.getCountry(), userDto.getCity(), userDto.getStreet(), userDto.getPostalCode());
+		user.addAddress(address);
+		return repository.save(user);
 	}
+	
 	@Override
-	public User updateUser(UserUpdateDto userDto, Long id) {
-		User userToBeUpdated = repository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+	public User updateUser(UserUpdateDto userDto, String username) {
+		User user = repository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 		mapper.getConfiguration().setSkipNullEnabled(true);
-		mapper.map(userDto, userToBeUpdated);
-		userToBeUpdated.setPassword(passwordEncoder.encode(userDto.getPassword()));
-		User savedUser = repository.save(userToBeUpdated);
-		return savedUser;
+		mapper.map(userDto, user);
+		user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+		Address address = new Address(userDto.getCountry(), userDto.getCity(), userDto.getStreet(), userDto.getPostalCode());
+		user.removeAddress(user.getAddresses().get(0));
+		user.addAddress(address);
+		return repository.save(user);
 	}
+	
+	@Override
+	public User addNewAddress(Address address, String username) {
+		
+		User user = repository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+		user.addAddress(address);
+		return repository.save(user);
+	}
+	
 	@Override
 	public User getUserById(Long id) {
 		User user = repository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
 		return user;
 	}
+	
 	@Override
 	public List<User> getAllUsers(){
 		List<User> userList = repository.findAll();
 		return userList;
 	}
+	
 	@Override
-	public void deleteUser(Long id) {
-		if (!repository.existsById(id)) {
+	public void deleteUser(String username) {
+		if (!repository.existsByUsername(username)) {
 			throw new RuntimeException("User not found");
 		}
-		repository.deleteById(id);
+		repository.deleteByUsername(username);
 	}
 }

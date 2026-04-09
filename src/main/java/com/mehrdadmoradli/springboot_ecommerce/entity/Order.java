@@ -38,8 +38,9 @@ public class Order {
 	@Column(nullable = false)
 	private OrderStatus status;
 	
-	@Column(nullable = false)
-	private String adress;
+	@ManyToOne
+	@JoinColumn(name = "address_id", nullable = false)
+	private Address adress;
 	
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<OrderItem> items = new ArrayList<>();
@@ -47,7 +48,7 @@ public class Order {
 	public Order() {
 	}
 
-	public Order(User user, BigDecimal totalPrice, LocalDateTime createdAt, OrderStatus status, String adress, List<OrderItem> items) {
+	public Order(User user, BigDecimal totalPrice, LocalDateTime createdAt, OrderStatus status, Address adress, List<OrderItem> items) {
 		this.user = user;
 		this.totalPrice = totalPrice;
 		this.createdAt = createdAt;
@@ -126,11 +127,11 @@ public class Order {
 		this.status = status;
 	}
 	
-	public String getAdress() {
+	public Address getAdress() {
 		return this.adress;
 	}
 	
-	public void setAdress(String adress) {
+	public void setAdress(Address adress) {
 		this.adress = adress;
 	}
 
