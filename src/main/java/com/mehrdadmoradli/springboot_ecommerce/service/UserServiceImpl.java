@@ -35,8 +35,10 @@ public class UserServiceImpl implements UserService {
 		Address address = new Address(userDto.getCountry(), userDto.getCity(), userDto.getStreet(), userDto.getPostalCode());
 		user.addAddress(address);
 		Cart cart = new Cart();
-		cart.setUser(user);
-		return repository.save(user);
+		User userToBeSaved = repository.save(user);
+		cart.setUser(userToBeSaved);
+		cartRepository.save(cart);
+		return userToBeSaved;
 	}
 	
 	@Override

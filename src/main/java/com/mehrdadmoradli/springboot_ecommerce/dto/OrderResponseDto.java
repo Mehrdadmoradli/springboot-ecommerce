@@ -9,6 +9,8 @@ import java.util.List;
 public class OrderResponseDto {
 
     private String username;
+    private BigDecimal netPrice;
+    private BigDecimal vatAmount;
     private BigDecimal totalPrice;
     private LocalDateTime createdAt;
     private OrderStatus status;
@@ -17,9 +19,11 @@ public class OrderResponseDto {
     public OrderResponseDto() {
     }
 
-    public OrderResponseDto(String username, BigDecimal totalPrice, LocalDateTime createdAt,
+    public OrderResponseDto(String username, BigDecimal netPrice, BigDecimal vatAmount, BigDecimal totalPrice, LocalDateTime createdAt,
                             OrderStatus status, List<OrderItemResponseDto> items) {
         this.username = username;
+        this.setNetPrice(netPrice);
+        this.setVatAmount(vatAmount);
         this.totalPrice = totalPrice;
         this.createdAt = createdAt;
         this.status = status;
@@ -65,4 +69,20 @@ public class OrderResponseDto {
     public void setItems(List<OrderItemResponseDto> items) {
         this.items = items;
     }
+
+	public BigDecimal getNetPrice() {
+		return netPrice;
+	}
+
+	public void setNetPrice(BigDecimal netPrice) {
+		this.netPrice = netPrice;
+	}
+
+	public BigDecimal getVatAmount() {
+		return vatAmount;
+	}
+
+	public void setVatAmount(BigDecimal vatAmount) {
+		this.vatAmount = vatAmount;
+	}
 }

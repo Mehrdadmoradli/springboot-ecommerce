@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.time.LocalDateTime;
-;
 
 
 
@@ -61,6 +59,8 @@ public class OrderServiceImpl implements OrderService {
 		order.setStatus(OrderStatus.CREATED); 
 		order.setAdress(user.getAddresses().get(0));
 		order.setItems(orderItems);
+		order.calculateNetPrice();
+		order.calculateVatAmount();
 		order.calculateTotalPrice();
 		
 		return orderRepository.save(order);

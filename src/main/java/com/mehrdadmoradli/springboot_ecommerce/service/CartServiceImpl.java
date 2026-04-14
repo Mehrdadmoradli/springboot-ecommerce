@@ -32,8 +32,8 @@ public class CartServiceImpl implements CartService {
 		item.updatePrice();
 		cart.getItems().add(item);
 		item.setCart(cart);
+		cart.calculateTotalPrice();
 		cartRepository.save(cart);
-		
 		return item;
 		
 	}
@@ -48,6 +48,7 @@ public class CartServiceImpl implements CartService {
 			CartItem item = iter.next();
 			if (item.getId().equals(cartItemId)) {
 				iter.remove();
+				cart.calculateTotalPrice();
 				return cartRepository.save(cart);
 			}
 		}
@@ -67,6 +68,7 @@ public class CartServiceImpl implements CartService {
 			if (item.getId().equals(cartItemId)) {
 				item.setQuantity(newQuantity);
 				item.updatePrice();
+				cart.calculateTotalPrice();
 				cartRepository.save(cart);
 				return item;
 			}

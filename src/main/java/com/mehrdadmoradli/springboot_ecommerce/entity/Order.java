@@ -1,6 +1,7 @@
 package com.mehrdadmoradli.springboot_ecommerce.entity;
 
 import com.mehrdadmoradli.springboot_ecommerce.enums.OrderStatus;
+import com.mehrdadmoradli.springboot_ecommerce.enums.VatRate;
 
 import jakarta.persistence.*;
 import java.math.*;
@@ -21,7 +22,17 @@ public class Order {
 	private User user;
 	
 	@Column(nullable = false)
-	private BigDecimal totalPrice = BigDecimal.ZERO;
+	private BigDecimal netPrice;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private VatRate vatRate = VatRate.STANDARD;
+	
+	@Column(nullable = false)
+	private BigDecimal vatAmount;
+	
+	@Column(nullable = false)
+	private BigDecimal totalPrice;
 	
 	@Column(nullable = false)
 	private LocalDateTime createdAt;
@@ -48,10 +59,8 @@ public class Order {
 	public Order() {
 	}
 
-	public Order(User user, BigDecimal totalPrice, LocalDateTime createdAt, OrderStatus status, Address adress, List<OrderItem> items) {
+	public Order(User user, OrderStatus status, Address adress, List<OrderItem> items) {
 		this.user = user;
-		this.totalPrice = totalPrice;
-		this.createdAt = createdAt;
 		this.status = status;
 		this.adress = adress;
 		this.items = items;
@@ -70,14 +79,22 @@ public class Order {
 		this.user = user;
 	}
 
+	public BigDecimal getNetPrice() {
+		return netPrice;
+	}
+	
+	public BigDecimal getVatRate() {
+		return this.vatRate.getRate();
+	}
+	
+	public BigDecimal getVatAmount() {
+		return this.vatAmount;
+	}
+	
 	public BigDecimal getTotalPrice() {
-		return totalPrice;
+		return this.totalPrice;
 	}
-
-	public void setTotalPrice(BigDecimal totalPrice) {
-		this.totalPrice = totalPrice;
-	}
-
+	
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
@@ -143,11 +160,21 @@ public class Order {
 		this.items = items;
 	}
 	
-	
-	public BigDecimal calculateTotalPrice() {
-		this.totalPrice = this.items.stream()
+	public BigDecimal calculateNetPrice() {
+		this.netPrice = this.items.stream()
 				.map(OrderItem::getPrice)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
+		return this.netPrice;
+	}
+	
+	public BigDecimal calculateVatAmount() {
+		this.vatAmount = this.netPrice.multiply(this.vatRate.getRate());
+		return this.vatAmount;
+	}
+	
+
+	public BigDecimal calculateTotalPrice() {
+		this.totalPrice = this.netPrice.add(this.vatAmount);
 		return this.totalPrice;
 	}
 	
